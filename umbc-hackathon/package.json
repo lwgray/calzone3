@@ -1,23 +1,17 @@
 {
-  "name": "umbc-hackathon-17",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "name": "umbc-hackathon",
+  "version": "0.0.0",
+  "license": "MIT",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "ng": "ng",
+    "start": "ng serve",
+    "build": "ng build",
+    "test": "ng test",
+    "lint": "ng lint",
+    "e2e": "ng e2e"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Vasanthkesavan/umbc-hackathon-17.git"
-  },
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/Vasanthkesavan/umbc-hackathon-17/issues"
-  },
-  "homepage": "https://github.com/Vasanthkesavan/umbc-hackathon-17#readme",
+  "private": true,
   "dependencies": {
-    "snoowrap": "^1.14.2",
     "@angular/common": "^2.4.0",
     "@angular/compiler": "^2.4.0",
     "@angular/core": "^2.4.0",
@@ -28,7 +22,8 @@
     "@angular/router": "^3.4.0",
     "core-js": "^2.4.1",
     "rxjs": "^5.1.0",
-    "zone.js": "^0.7.6"
+    "zone.js": "^0.7.6",
+    "snoowrap": "^1.14.2"
   },
   "devDependencies": {
     "@angular/cli": "1.0.0-rc.2",
