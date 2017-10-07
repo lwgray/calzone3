@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/Vasanthkesavan/umbc-hackathon-17/issues"
   },
-  "homepage": "https://github.com/Vasanthkesavan/umbc-hackathon-17#readme"
+  "homepage": "https://github.com/Vasanthkesavan/umbc-hackathon-17#readme",
+  "dependencies": {
+    "snoowrap": "^1.14.2"
+  }
 }
