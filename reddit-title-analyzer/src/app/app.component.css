@@ -6,11 +6,11 @@
   flex: 1 1 auto;
 }
 .main-input{
-    width:75%;
+    /* width:75%; */
     height:640px;
-    margin-left:auto;
-    margin-right:auto;
-    margin-top: 24px;
+    /* margin-left:auto;
+    margin-right:auto; */
+    /* margin-top: 24px; */
     margin-bottom: 24px;
 }
 .full-width{
@@ -21,9 +21,72 @@
   font-size: 32px;
 }
 :host /deep/ .mat-input-placeholder {
-  font-size: 3.5em;
   text-align: center;
 }
-:host /deep/ .mat-focused {
-  font-size: .5em;
+
+.example-form{
+
+}
+.form-inputs{
+  max-height:148px; 
+  min-height:148px; 
+  width:75%; 
+  margin-left:auto; 
+  margin-right:auto; 
+  text-align:center;
+}
+#header{
+  border-bottom: 1px solid #5f99cf;
+  position: relative;
+  background-color: #cee3f8;
+  z-index: 99;
+
+  width: 100%;
+}
+#header-image{
+  text-indent: -9999px;
+  background-image: url('/assets/sprite.png');
+  
+  background-repeat: no-repeat;
+  height: 50px;
+  width: 150px;
+  display: inline-block;
+  vertical-align: bottom;
+  margin-bottom: 3px;
+  z-index: 1000;
+}
+.mat-card-header-text{
+  margin: 0 0 0 0;
+  /* border-radius:5px; */
+  
+}
+.mat-card{
+  padding:0 0 0 0;
+  /* border-radius:5px; */
+}
+.header-text{
+  font-weight: bold;
+  margin-right: 1ex;
+  font-variant: small-caps;
+  font-variant-ligatures: normal;
+  font-variant-caps: small-caps;
+  font-variant-numeric: normal;
+  font-size: 1.2em;
+  vertical-align: bottom;
+}
+.preview-box{
+  background-image: url('/assets/preview.png');
+  background-repeat: no-repeat;
+  
+}
+#preview-text{
+  width: auto;
+  position: relative;
+  left: 150px;
+  top: 90px;
+  color: blue;
+  font-weight: normal;
+  font-size: medium;
+  background: none;
+  border: none;
 }

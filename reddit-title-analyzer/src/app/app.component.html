@@ -1,31 +1,25 @@
-<mat-toolbar style="opacity:.7" color="primary">
+<!-- <mat-toolbar style="opacity:.7" color="primary">
   <mat-icon class="example-icon">chrome_reader_mode</mat-icon>
   <span>Reddit Title Analyzer</span>
 
-</mat-toolbar>
+</mat-toolbar> -->
 <div fxLayout="column">
 
-  <mat-card fxFlex="100%" class="main-input">
-    <mat-card-header>
-      <div mat-card-avatar class="example-header-image"></div>
-      <mat-card-title><h1>Check Title Score</h1></mat-card-title>
-    </mat-card-header>
-    <mat-card-content>
-<form class="example-form">
-  <div #container style="max-height:148px; width:75%; margin-left:auto; margin-right:auto; text-align:center;">
-    <mat-form-field class="example-full-width" style="width:100%">
-      <input style="text-align:center" [fittext]="true" [activateOnResize]="true" [container]="container" [activateOnInputEvents]="true" [useMaxFontSize]="false" matInput placeholder="Your Title Here">
-    </mat-form-field>
-  </div>
-</form>
-    </mat-card-content>
-    <mat-card-actions style="position:absolute; bottom:32px; width:100%;">
-      <button class="go-button" fxFlex="100%" style="margin-left:32px; margin-right:32px;" color="primary" mat-raised-button>Go
-        <mat-icon>send</mat-icon>
-      </button>
-      
-    </mat-card-actions>
+  <mat-card  class="main-input">
+    <div class="mat-card-header" style="width:100%;">
+      <mat-card-title style="width:100%; border-radius: 5px 5px 0 0;" id="header">
+        <div id="header-image"></div>
+        <span class="header-text">/r/super_title_maker</span>
+      </mat-card-title>
+    </div>
+    <router-outlet></router-outlet>
   </mat-card>
+
+  <button routerLink="/results" routerLinkActive="active" class="go-button" fxFlex="100%" style="margin-left:32px; margin-right:32px;" color="accent" mat-raised-button>Go
+    <mat-icon>send</mat-icon>
+  </button>
+
+
   <mat-divider>
   </mat-divider>
 </div>
