@@ -1,0 +1,29 @@
+.example-icon {
+  padding: 0 14px;
+}
+
+.example-spacer {
+  flex: 1 1 auto;
+}
+.main-input{
+    width:75%;
+    height:640px;
+    margin-left:auto;
+    margin-right:auto;
+    margin-top: 24px;
+    margin-bottom: 24px;
+}
+.full-width{
+    width:100%;
+}
+.go-button{
+  height:64px;
+  font-size: 32px;
+}
+:host /deep/ .mat-input-placeholder {
+  font-size: 3.5em;
+  text-align: center;
+}
+:host /deep/ .mat-focused {
+  font-size: .5em;
+}
