@@ -7,12 +7,16 @@ import { MatInputModule,MatCardModule, MatButtonModule, MatAutocompleteModule, M
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { LandingPageComponent } from './landing-page/landing-page.component';
 import { Ng2FittextModule } from 'ng2-fittext';
+import { FormsModule, ReactiveFormsModule, FormControl} from '@angular/forms';
+
 @NgModule({
   declarations: [
     AppComponent,
     LandingPageComponent
   ],
   imports: [
+    ReactiveFormsModule,
+    FormsModule,
     Ng2FittextModule,
     MatInputModule,
     BrowserModule,
