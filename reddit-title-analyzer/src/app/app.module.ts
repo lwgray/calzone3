@@ -14,7 +14,7 @@ import { ChartsModule } from 'ng2-charts';
 const appRoutes: Routes = [
   { path: 'start', component: StartPageComponent },
   { path: 'results', component: DataResultsComponent },
-  // { path: '**', component: StartPageComponent }
+  { path: '**', component: StartPageComponent }
 ];
 
 @NgModule({

@@ -7,20 +7,20 @@
         <span class="header-text">/r/super_title_maker</span>
       </mat-card-title>
     </div> -->
-<mat-card-content fxFlexFill>
+<mat-card-content>
   <div fxLayout="row" fxFlex="100%">
-    <div class="preview-box" fxFlex="40%">
+    <div class="preview-box" fxFlex="45%" [ngStyle]="titletext.length>0 ? {'opacity':'1'} : {'opacity':'0'}">
       <input disabled [(ngModel)]="titletext" value="{{titletext}}" id="preview-text">
     </div>
-    <div fxFlex="100%">
+    <div fxFlex="55%">
       <form fxFlexFill fxLayout="column" class="example-form">
         <div class="form-inputs" style="margin-top:120px;">
           <mat-form-field class="form-inputs full-width">
-            <input matInput name="query" [(ngModel)]="titletext" style="text-align:center" placeholder="Enter Title">
+            <input matInput name="query" [(ngModel)]="titletext" style="text-align:center" required placeholder="Enter Title">
           </mat-form-field>
           <mat-form-field class="form-inputs full-width">
 
-            <input style="text-align:center" matInput placeholder="Target Subreddit" aria-label="Target Subreddit" [matAutocomplete]="auto"
+            <input style="text-align:center" required matInput placeholder="Target Subreddit" aria-label="Target Subreddit" [matAutocomplete]="auto"
               [formControl]="stateCtrl">
             <mat-autocomplete #auto="matAutocomplete">
               <mat-option *ngFor="let state of filteredStates | async" [value]="state.name">
@@ -33,11 +33,16 @@
             </mat-autocomplete>
           </mat-form-field>
         </div>
+        <button routerLink="/results" routerLinkActive="active" class="go-button" fxFlex="100%" style="margin-left:32px; margin-right:32px;"
+          color="accent" mat-raised-button>Go
+          <mat-icon>send</mat-icon>
+        </button>
 
       </form>
     </div>
   </div>
 </mat-card-content>
+
 <!-- </mat-card>
 
   <button class="go-button" fxFlex="100%" style="margin-left:32px; margin-right:32px;" color="accent" mat-raised-button>Go

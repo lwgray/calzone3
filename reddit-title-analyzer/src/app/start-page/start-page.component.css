@@ -19,6 +19,7 @@
   .go-button{
     height:64px;
     font-size: 32px;
+    margin-top:72px;
   }
   :host /deep/ .mat-input-placeholder {
     text-align: center;
@@ -75,8 +76,11 @@
     vertical-align: bottom;
   }
   .preview-box{
+    opacity: 0;
     background-image: url('/assets/preview.png');
     background-repeat: no-repeat;
+    -webkit-transition: opacity 1s; /* Safari */
+    transition: opacity 1s;
     
   }
   #preview-text{

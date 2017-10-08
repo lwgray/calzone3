@@ -11,6 +11,7 @@ export class StartPageComponent implements OnInit {
 
   ngOnInit() {
   }
+  mySubreddit = ""
   titletext = "";
   filteredStates: Observable<any[]>;
   stateCtrl: FormControl;
