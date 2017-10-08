@@ -9,6 +9,7 @@
 /node_modules
 /redditposts.db
 /reddit_config.js
+/package-lock.json.orig
 
 # IDEs and editors
 /.idea

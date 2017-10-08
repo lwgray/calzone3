@@ -10,8 +10,8 @@ reddit = praw.Reddit(client_id='kZLtaDQZnQAcrw',
                     user_agent='RedditApiClient/0.1 by Vasanth',
                     username='vk432')
 
-subreddit = reddit.subreddit('politics')
-list_of_submissions = subreddit.submissions(1504657288, 1507249288)
+subreddit = reddit.subreddit(sys.argv[1])
+list_of_submissions = subreddit.submissions(1483228800, 1507420800)
 
 con = None
 i=0
@@ -31,7 +31,7 @@ try:
              INSERT INTO posts 
              VALUES(null,?,?,?)
             """,
-            (submission.title.encode("utf-8"),submission.ups,"Politics")
+            (submission.title.encode("utf-8"),submission.ups,sys.argv[1])
           )
             
 except lite.Error, e:
