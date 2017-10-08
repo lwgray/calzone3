@@ -28,11 +28,11 @@ try:
 
           # print command
           cur.execute ("""
-		     INSERT INTO posts 
-			 VALUES(?,?,?,?)
-			""",
-			(i,submission.title.encode("utf-8"),submission.ups,"Politics")
-		  )
+             INSERT INTO posts 
+             VALUES(null,?,?,?)
+            """,
+            (submission.title.encode("utf-8"),submission.ups,"Politics")
+          )
             
 except lite.Error, e:
     print e
