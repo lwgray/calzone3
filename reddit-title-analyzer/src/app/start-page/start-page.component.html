@@ -1,0 +1,50 @@
+<!-- <div fxLayout="column">
+
+  <mat-card fxFlex="100%" class="main-input">
+    <div class="mat-card-header" style="width:100%;">
+      <mat-card-title style="width:100%; border-radius: 5px 5px 0 0;" id="header">
+        <div id="header-image"></div>
+        <span class="header-text">/r/super_title_maker</span>
+      </mat-card-title>
+    </div> -->
+<mat-card-content fxFlexFill>
+  <div fxLayout="row" fxFlex="100%">
+    <div class="preview-box" fxFlex="40%">
+      <input disabled [(ngModel)]="titletext" value="{{titletext}}" id="preview-text">
+    </div>
+    <div fxFlex="100%">
+      <form fxFlexFill fxLayout="column" class="example-form">
+        <div class="form-inputs" style="margin-top:120px;">
+          <mat-form-field class="form-inputs full-width">
+            <input matInput name="query" [(ngModel)]="titletext" style="text-align:center" placeholder="Enter Title">
+          </mat-form-field>
+          <mat-form-field class="form-inputs full-width">
+
+            <input style="text-align:center" matInput placeholder="Target Subreddit" aria-label="Target Subreddit" [matAutocomplete]="auto"
+              [formControl]="stateCtrl">
+            <mat-autocomplete #auto="matAutocomplete">
+              <mat-option *ngFor="let state of filteredStates | async" [value]="state.name">
+                <!-- <img style="vertical-align:middle;" aria-hidden src="{{state.flag}}" height="25" /> -->
+                <span>{{ state.name }}</span>
+                <small>
+                  <b>Subscribers: {{state.subscribers}}</b>
+                </small>
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</mat-card-content>
+<!-- </mat-card>
+
+  <button class="go-button" fxFlex="100%" style="margin-left:32px; margin-right:32px;" color="accent" mat-raised-button>Go
+    <mat-icon>send</mat-icon>
+  </button>
+
+
+  <mat-divider>
+  </mat-divider>
+</div> -->
