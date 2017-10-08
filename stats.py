@@ -1,6 +1,8 @@
 #! /usr/bin/env python3
 
-import urllib.request
+from urllib.request import urlopen
+
+import sys
 
 # subreddit
 
@@ -9,11 +11,15 @@ import urllib.request
 
 if __name__ == "__main__":
 	if len(sys.argv) != 3:
-		return
+		quit()
 	
 	# Set the URL to the appropriate endpoint
 	url = "https://www.reddit.com/r/{0}/{1}/.json".format(
 		sys.argv[1], sys.argv[2]
 	)
 	
-	# urllib.request.urlopen(...)
+	# response = urlopen(url)
+	# data = response.read()
+	
+	# print(data)
+	# print(type(data))
