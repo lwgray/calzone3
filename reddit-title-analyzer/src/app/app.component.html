@@ -13,35 +13,35 @@
       </mat-card-title>
     </div>
     <mat-card-content fxFlexFill>
-      <div style="height:100%;">
-        <form fxFlexFill fxLayout="column" class="example-form">
+      <div fxLayout="row" fxFlex="100%">
+        <div class="preview-box" fxFlex="40%">
+          <input disabled [(ngModel)]="titletext" value="{{titletext}}" id="preview-text">
+        </div>
+        <div fxFlex="100%">
+          <form fxFlexFill fxLayout="column" class="example-form">
+            <div class="form-inputs" style="margin-top:120px;">
+              <mat-form-field class="form-inputs full-width">
+                <input matInput name="query" [(ngModel)]="titletext" style="text-align:center" placeholder="Enter Title">
+              </mat-form-field>
+              <mat-form-field class="form-inputs full-width">
 
-          <div #container class="form-inputs">
+                <input style="text-align:center" matInput placeholder="Target Subreddit" aria-label="Target Subreddit" [matAutocomplete]="auto"
+                  [formControl]="stateCtrl">
+                <mat-autocomplete #auto="matAutocomplete">
+                  <mat-option *ngFor="let state of filteredStates | async" [value]="state.name">
+                    <!-- <img style="vertical-align:middle;" aria-hidden src="{{state.flag}}" height="25" /> -->
+                    <span>{{ state.name }}</span>
+                    <small>
+                      <b>Subscribers: {{state.subscribers}}</b>
+                    </small>
+                  </mat-option>
+                </mat-autocomplete>
+              </mat-form-field>
+            </div>
 
-            <mat-form-field class="example-full-width" style="width:100%">
-              <input style="text-align:center" [fittext]="true" [activateOnResize]="true" [container]="container" [activateOnInputEvents]="true"
-                [useMaxFontSize]="false" matInput placeholder="">
-            </mat-form-field>
-          </div>
-          <div class="form-inputs" style="margin-top:120px;">
-            <mat-form-field class="form-inputs full-width">
-              <input style="text-align:center" matInput placeholder="Target Subreddit" aria-label="Target Subreddit" [matAutocomplete]="auto"
-                [formControl]="stateCtrl">
-              <mat-autocomplete #auto="matAutocomplete">
-                <mat-option *ngFor="let state of filteredStates | async" [value]="state.name">
-                  <!-- <img style="vertical-align:middle;" aria-hidden src="{{state.flag}}" height="25" /> -->
-                  <span>{{ state.name }}</span>
-                  <small>
-                    <b>Subscribers: {{state.subscribers}}</b>
-                  </small>
-                </mat-option>
-              </mat-autocomplete>
-            </mat-form-field>
-          </div>
-
-        </form>
+          </form>
+        </div>
       </div>
-
     </mat-card-content>
   </mat-card>
 

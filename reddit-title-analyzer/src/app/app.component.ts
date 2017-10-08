@@ -11,6 +11,7 @@ import { FormControl } from '@angular/forms';
 })
 export class AppComponent {
   title = 'app';
+  titletext = "";
   filteredStates: Observable<any[]>;
   stateCtrl: FormControl;
   
