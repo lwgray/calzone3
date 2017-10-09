@@ -1,5 +1,5 @@
 *.sqlite
-
+*.pyc
 node_modules
 sqldiff.exe
 sqlite3.exe
