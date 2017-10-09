@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { FormControl } from '@angular/forms';
+import {Router, ActivatedRoute, Params} from '@angular/router';
 
 @Component({
   selector: 'app-start-page',
@@ -10,6 +11,7 @@ import { FormControl } from '@angular/forms';
 export class StartPageComponent implements OnInit {
 
   ngOnInit() {
+    
   }
   mySubreddit = ""
   titletext = "";
@@ -115,7 +117,9 @@ export class StartPageComponent implements OnInit {
     { rank: '100', name: '/r/YouShouldKnow', subscribers: '663597' }
   ];
 
-  constructor() {this.stateCtrl = new FormControl();
+  constructor(private activatedRoute: ActivatedRoute) {
+    
+    this.stateCtrl = new FormControl();
     this.filteredStates = this.stateCtrl.valueChanges
         .startWith(null)
         .map(state => state ? this.filterStates(state) : this.states.slice());
@@ -126,4 +130,6 @@ export class StartPageComponent implements OnInit {
     return this.states.filter(state =>
       state.name.slice(3).toLowerCase().indexOf(name.toLowerCase()) === 0);
   }
+
+
 }

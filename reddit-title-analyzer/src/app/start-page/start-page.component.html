@@ -33,7 +33,7 @@
             </mat-autocomplete>
           </mat-form-field>
         </div>
-        <button routerLink="/results" routerLinkActive="active" class="go-button" fxFlex="100%" style="margin-left:32px; margin-right:32px;"
+        <button [routerLink]="['/results',titletext]" routerLinkActive="active" class="go-button" fxFlex="100%" style="margin-left:32px; margin-right:32px;"
           color="accent" mat-raised-button>Go
           <mat-icon>send</mat-icon>
         </button>

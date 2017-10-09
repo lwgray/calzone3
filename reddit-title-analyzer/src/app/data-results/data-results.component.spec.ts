@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { DataResultsComponent } from './data-results.component';
+import {Router, ActivatedRoute, Params} from '@angular/router';
 
 describe('DataResultsComponent', () => {
   let component: DataResultsComponent;

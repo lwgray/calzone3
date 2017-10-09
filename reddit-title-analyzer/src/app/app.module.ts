@@ -5,27 +5,28 @@ import 'rxjs/add/operator/map'
 import { AppComponent } from './app.component';
 import { MatInputModule, MatCardModule, MatButtonModule, MatAutocompleteModule, MatIconModule, MatToolbarModule } from '@angular/material';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { LandingPageComponent } from './landing-page/landing-page.component';
 import { FormsModule, ReactiveFormsModule, FormControl } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { StartPageComponent } from './start-page/start-page.component';
 import { DataResultsComponent } from './data-results/data-results.component';
 import { ChartsModule } from 'ng2-charts';
+import { HttpModule } from '@angular/http';
+import {HttpClientModule} from '@angular/common/http/';
 const appRoutes: Routes = [
   { path: 'start', component: StartPageComponent },
-  { path: 'results', component: DataResultsComponent },
+  { path: 'results/:query', component: DataResultsComponent },
  { path: '**', component: StartPageComponent }
-  { path: '**', component: StartPageComponent }
 ];
 
 @NgModule({
   declarations: [
     AppComponent,
-    LandingPageComponent,
     StartPageComponent,
-    DataResultsComponent
+    DataResultsComponent,
   ],
   imports: [
+    HttpClientModule,
+    HttpModule,
     ChartsModule,
     RouterModule.forRoot(appRoutes),
     ReactiveFormsModule,
