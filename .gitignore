@@ -4,3 +4,5 @@ node_modules
 sqldiff.exe
 sqlite3.exe
 sqlite3_analyzer.exe
+.ipynb_checkpoints
+*.ini
