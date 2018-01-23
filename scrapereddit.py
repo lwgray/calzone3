@@ -23,7 +23,7 @@ try:
        for submission in list_of_submissions:
           i+=1
           if i % 50 == 0:
-             print i
+             print (i)
          
 
           # print command
@@ -34,8 +34,8 @@ try:
             (submission.title.encode("utf-8"),submission.ups,sys.argv[1])
           )
             
-except lite.Error, e:
-    print e
+except lite.Error as e:
+    print (e)
     pass
     
 finally:

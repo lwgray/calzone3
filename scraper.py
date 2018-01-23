@@ -12,21 +12,21 @@ TIMESTAMP_B = 1507249288
 
 # DEBUG
 def timing(method):
-	@wraps(method)
-	def timed(*args, **kwargs):
-		time_s = time.time()
-		
-		# TODO Write comment
-		result = method(*args, **kwargs)
-		
-		time_e = time.time()
-		
-		print("Elapsed time: {0}".format(time_s - time_e))
-		
-		return result
-	
-	# TODO Write comment
-	return timed
+    @wraps(method)
+    def timed(*args, **kwargs):
+            time_s = time.time()
+
+            # TODO Write comment
+            result = method(*args, **kwargs)
+
+            time_e = time.time()
+
+            print("Elapsed time: {0}".format(time_s - time_e))
+
+            return result
+
+    # TODO Write comment
+    return timed
 
 def format_data(submissions, subreddit = None):
 	for data in submissions:
@@ -47,7 +47,7 @@ reddit = praw.Reddit(
 	client_id     = config["client_data"]["client_id"],
 	client_secret = config["client_data"]["client_secret"],
 	user_agent    = config["client_data"]["user_agent"],
-	
+
 	# [credentials]
 	username = config["credentials"]["username"],
 	password = config["credentials"]["password"]
