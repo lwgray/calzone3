@@ -106,3 +106,28 @@ class Nouns(BaseEstimator, TransformerMixin):
         noun_phrases = [len(blob.noun_phrases) for blob in blobs]
         df = pd.DataFrame({'noun_phrases': noun_phrases})
         return df.noun_phrases.values.reshape(-1, 1)
+
+
+class Blob(BaseEstimator, TransformerMixin):
+    """ Combine noun, subject, polar extractors """
+
+    def fit(self, x, y=None):
+        return self
+
+    def transform(self, titles):
+        blobs = [(len(x.noun_phrases), x.sentiment.subjectivity, x.sentiment.polarity) for x in [TextBlob(sentence) for sentence in titles]]
+        return blobs
+
+
+class Words(BaseEstimator, TransformerMixin):
+    """ Combine Vowels,Consonants, CharCount, and WordCount extractors """
+
+    def fit(self, x, y=None):
+        return self
+
+    def transform(self, titles):
+        words = list(zip(titles.str.findall('r[aeiou]').apply(len),
+                         titles.str.findall('r[^aeiou]').apply(len),
+                         titles.str.len(),
+                         titles.str.split().apply(len)))
+        return words

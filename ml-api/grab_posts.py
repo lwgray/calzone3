@@ -5,6 +5,9 @@ import csv
 import praw
 from configparser import ConfigParser
 import time
+import argparse
+import sys
+from process_posts import process
 
 
 config = ConfigParser()
@@ -32,46 +35,57 @@ def get_timestamps(time1, time2):
     return t1, t2
 
 
-t1, t2 = get_timestamps('11/13/2017', '12/13/2017')
-sbrt = pd.read_csv('subreddit.csv')
-s = sbrt.subreddit.tolist()
+def main(sub=False, f_input='subreddit.csv', number=2000, f_output='posts.csv', start=None, end=None):
+    print(f_input)
+    print(f_output)
+    print(number)
+    if sub:
+        s = [sub]
+    else:
+        sbrt = pd.read_csv(f_input)
+        s = sbrt.subreddit.tolist()
+        print(s[:3])
 
-'''
-with open('posts.csv', 'a') as posts:
-    writer = csv.writer(posts)
-    for subreddit in s:
-        x = reddit.subreddit(subreddit)
-        submissions = x.submissions(t1, t2)
-        for index, data in enumerate(submissions):
-            try:
-                print (subreddit, index, data.title)
-                if index > 2000:
+    with open(f_output, 'a') as posts:
+        writer = csv.writer(posts)
+        for subreddit in s:
+            index = 0
+            x = reddit.subreddit(subreddit)
+            if start is not None and end is not None:
+                t1, t2 = get_timestamps(start, end)
+                submissions = x.submissions(t1, t2)
+            else:
+                submissions = x.submissions()
+            while index <= number:
+                try:
+                    data = next(submissions)
+                    print (subreddit, index, data.title)
+                    writer.writerow([data.id, data.subreddit_name_prefixed,
+                                     data.title, data.ups, data.url,
+                                     str(data.created_utc)])
+                    index += 1
+                except StopIteration:
                     break
-                writer.writerow([data.id, data.subreddit_name_prefixed, data.title,
-                                data.ups, data.url, str(data.created_utc)])
-            except:
-                time.sleep(3600)
-                continue
-'''
+                except Exception as e:
+                    print(str(e))
+                    for i in xrange(3600, 0, -1):
+                        time.sleep(1)
+                        print(i)
+                    continue
+    process(f_output, 'processed_{0}'.format(f_output))
 
-with open('posts.csv', 'a') as posts:
-    writer = csv.writer(posts)
-    for subreddit in s:
-        index = 0
-        x = reddit.subreddit(subreddit)
-        submissions = x.submissions(t1, t2)
-        while index <= 2000:
-            try:
-                data = next(submissions)
-                print (subreddit, index, data.title)
-                writer.writerow([data.id, data.subreddit_name_prefixed, data.title,
-                                data.ups, data.url, str(data.created_utc)])
-                index += 1
-            except StopIteration:
-                break
-            except:
-                for i in xrange(3600,0,-1):
-                    time.sleep(1)
-                    print(i)
-                continue
 
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='Grab posts by time')
+    parser.add_argument('--subreddit', '-s', default='python',
+                        help="Choose subreddit to search")
+    parser.add_argument('--input', '-i', default='subreddit.csv',
+                        help="Name of input file")
+    parser.add_argument('--output', '-o', default='posts.csv',
+                        help="Name of output file")
+    parser.add_argument('--start', '-t1', help="Start date - format month/day/year")
+    parser.add_argument('--end', '-t2', help="End date - format month/day/year")
+    parser.add_argument('--number', '-n', default=2000, type=int, help="The number of posts to grab")
+    args = parser.parse_args()
+    sys.exit(main(args.subreddit, args.input, args.number, args.output,
+                  args.start, args.end))
