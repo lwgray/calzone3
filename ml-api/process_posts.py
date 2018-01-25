@@ -18,9 +18,12 @@ def process(f_input, f_output):
     
     """
     pd.set_option('display.float_format', lambda x: '%.1f' % x)
-
-    data = pd.read_csv(f_input, names=['id', 'subreddit', 'title', 'ups', 'url', 'created_utc'])
-
+    try:
+        data = pd.read_csv(f_input,
+                           names=['id', 'subreddit', 'title', 'ups', 'url', 'created_utc'],
+                           encoding = "ISO-8859-1")
+    except:
+        print('caught in reading')
     # Remove Duplicate Titles
     data.drop_duplicates('title', inplace=True)
 
@@ -37,8 +40,10 @@ def process(f_input, f_output):
     data.loc[data.subreddit=='r/photoshopbattles', 
              'title'] = data.loc[data['subreddit'] == 'r/photoshopbattles',
                                  'title'].str.replace('PsBattle:', '')
-
-    data.to_csv(f_output, index=False)
+    try:
+        data.to_csv('{0}.bz2'.format(f_output), index=False, compression='bz2', encoding='ISO-8859-1')
+    except:
+        print('caught in writing')
     return
 
 
