@@ -59,20 +59,20 @@ def main(sub=False, f_input='subreddit.csv', number=2000, f_output='posts.csv', 
             while index <= number:
                 try:
                     data = next(submissions)
-                    print (subreddit, index, data.title.encode("utf-8") )
+                    print (subreddit, index, data.title.encode("utf-8"))
                     writer.writerow([data.id, data.subreddit_name_prefixed,
-                                     data.title.encode("utf-8"), data.ups, data.url,
-                                     str(data.created_utc)])
+                                     data.title.encode("utf-8"), data.ups,
+                                     data.url, str(data.created_utc)])
                     index += 1
                 except StopIteration:
                     break
                 except Exception as e:
                     print('General Exception', str(e), data.title)
-                    for i in range(3600, 0, -1):
+                    for i in range(60, 0, -1):
                         time.sleep(1)
                         print(i)
                     continue
-    process(f_output, 'processed_{0}'.format(f_output))
+            process(f_output, 'processed_{0}.csv'.format(subreddit))
 
 
 if __name__ == '__main__':
