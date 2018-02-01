@@ -35,4 +35,4 @@ def process(data, f_output):
 
     data.to_csv('{0}.bz2'.format(f_output), index=False,
                 compression='bz2', encoding='utf-8')
-    return
+    return data

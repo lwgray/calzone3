@@ -1,61 +1,87 @@
+""" Script to Search for posts within Subreddits """
 import calendar
 from datetime import datetime
-import pandas as pd
-import csv
-import praw
-from configparser import ConfigParser
 import time
 import argparse
 import sys
+import pandas as pd
+import praw
+from configparser import ConfigParser
 from pp_test import process
 
 
-config = ConfigParser()
-config.read('../config2.ini')
+CONFIG = ConfigParser()
+CONFIG.read('../config2.ini')
 
-reddit = praw.Reddit(
+REDDIT = praw.Reddit(
     # [client_data]
-    client_id=config["client_data"]["client_id"],
-    client_secret=config["client_data"]["client_secret"],
-    user_agent=config["client_data"]["user_agent"],
+    client_id=CONFIG["client_data"]["client_id"],
+    client_secret=CONFIG["client_data"]["client_secret"],
+    user_agent=CONFIG["client_data"]["user_agent"],
 
     # [credentials]
-    username=config["credentials"]["username"],
-    password=config["credentials"]["password"]
+    username=CONFIG["credentials"]["username"],
+    password=CONFIG["credentials"]["password"]
 )
 
 
 def get_timestamps(time1, time2):
+    """Convert Dates to Timestamps
+
+    Args:
+        time1(str): Start time in '01/01/2001' format
+        time2(str): End Time in '01/01/2001' format
+
+    Returns:
+        t1(float): Timestamp for start date
+        t2(float): Timestamp for end date
+
+    """
     month1, day1, year1 = time1.split('/')
     month2, day2, year2 = time2.split('/')
     dt1 = datetime(int(year1), int(month1), int(day1))
     dt2 = datetime(int(year2), int(month2), int(day2))
-    t1 = calendar.timegm(dt1.timetuple())
-    t2 = calendar.timegm(dt2.timetuple())
-    return t1, t2
+    timestamp1 = calendar.timegm(dt1.timetuple())
+    timestamp2 = calendar.timegm(dt2.timetuple())
+    return timestamp1, timestamp2
 
 
-def main(sub=False, f_input='subreddit.csv', number=100, f_output=False, start=None, end=None):
-    all_posts = []
+def grab_posts(sub=False, f_input='subreddit.csv', number=2000,
+               f_output='posts.csv', start=None, end=None, verbose=False):
+    """ Grab Subreddit posts under various conditions
+
+    Args:
+        sub(str): The name of subreddit to search
+        f_input(str):       The file with a list of subreddits to search
+        number(int):        The number of posts to retreive
+        f_output(str):      The name of a file to write posts to
+        start/end(str):     The date range to search
+        verbose(boolean):   Print out information about subreddit
+
+    Returns:
+        data(Pandas Dataframe): DataFrame with retrieved posts
+
+    """
     if sub:
-        s = [sub]
+        subs = [sub]
     else:
         sbrt = pd.read_csv(f_input)
-        s = sbrt.subreddit.tolist()
-    
-    for subreddit in s:
+        subs = sbrt.subreddit.tolist()
+
+    for subreddit in subs:
         features = []
         index = 0
-        x = reddit.subreddit(subreddit)
+        post = REDDIT.subreddit(subreddit)
         if start is not None and end is not None:
-            t1, t2 = get_timestamps(start, end)
-            submissions = x.submissions(t1, t2)
+            timestamp1, timestamp2 = get_timestamps(start, end)
+            submissions = post.submissions(timestamp1, timestamp2)
         else:
-            submissions = x.submissions()
+            submissions = post.submissions()
         while index <= number:
             try:
                 data = next(submissions)
-                print (subreddit, index, data.title)
+                if verbose:
+                    print (subreddit, index, data.title)
                 features.append([data.id, data.subreddit_name_prefixed,
                                  data.title, data.ups,
                                  data.url, str(data.created_utc)])
@@ -63,21 +89,18 @@ def main(sub=False, f_input='subreddit.csv', number=100, f_output=False, start=N
                 attempts = 1
             except StopIteration:
                 break
-            except Exception as e:
-                print('General Exception', str(e), data.title)
+            except Exception as msg:
+                print('General Exception', str(msg), data.title)
                 for i in range(60 * attempts, 0, -1):
                     time.sleep(1)
                     print(i)
                 attempts += 1
                 continue
-        if not f_output:
-            df = pd.DataFrame(data=features, columns=['id', 'subreddit', 'title', 'ups', 'url', 'created_utc'])
-            process(df, 'processed_{0}.csv'.format(subreddit))
-        else:
-            all_posts += features
-    if f_output:
-        df = pd.DataFrame(data=all_posts, columns=['id', 'subreddit', 'title', 'ups', 'url', 'created_utc'])
-        process(df, 'processed_{0}'.format(f_output))
+        dframe = pd.DataFrame(data=features,
+                              columns=['id', 'subreddit', 'title', 'ups',
+                                       'url', 'created_utc'])
+        data = process(dframe, 'processed_{0}.csv'.format(subreddit))
+    return data
 
 
 if __name__ == '__main__':
@@ -88,9 +111,14 @@ if __name__ == '__main__':
                         help="CSV file containing list of subreddits")
     parser.add_argument('--output', '-o', default=False,
                         help="CSV file to write data to")
-    parser.add_argument('--start', '-t1', help="Start date - format month/day/year")
-    parser.add_argument('--end', '-t2', help="End date - format month/day/year")
-    parser.add_argument('--number', '-n', default=2000, type=int, help="The number of posts to grab")
+    parser.add_argument('--start', '-t1',
+                        help="Start date - format month/day/year")
+    parser.add_argument('--end', '-t2',
+                        help="End date - format month/day/year")
+    parser.add_argument('--number', '-n', default=2000, type=int,
+                        help="The number of posts to grab")
+    parser.add_argument('--verbose', '-v', default=False,
+                        help="Turn on print-to-screen")
     args = parser.parse_args()
-    sys.exit(main(args.subreddit, args.input, args.number, args.output,
-                  args.start, args.end))
+    sys.exit(grab_posts(args.subreddit, args.input, args.number, args.output,
+                        args.start, args.end))
