@@ -35,9 +35,7 @@ def get_timestamps(time1, time2):
     return t1, t2
 
 
-def main(sub=False, f_input='subreddit.csv', number=2000, f_output='posts.csv', start=None, end=None):
-    print(f_input)
-    print(number)
+def main(sub=False, f_input='subreddit.csv', number=2000, f_output='posts.csv', start=None, end=None, verbose=False):
     if sub:
         s = [sub]
     else:
@@ -57,7 +55,8 @@ def main(sub=False, f_input='subreddit.csv', number=2000, f_output='posts.csv', 
         while index <= number:
             try:
                 data = next(submissions)
-                print (subreddit, index, data.title)
+                if verbose:
+                    print (subreddit, index, data.title)
                 features.append([data.id, data.subreddit_name_prefixed,
                                  data.title.encode("utf-8"), data.ups,
                                  data.url, str(data.created_utc)])
@@ -71,8 +70,8 @@ def main(sub=False, f_input='subreddit.csv', number=2000, f_output='posts.csv', 
                     print(i)
                 continue
         df = pd.DataFrame(data=features, columns=['id', 'subreddit', 'title', 'ups', 'url', 'created_utc'])
-        process(df, 'processed_{0}.csv'.format(subreddit))
-
+        data = process(df, 'processed_{0}.csv'.format(subreddit))
+    return data
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Grab posts by time')
@@ -85,6 +84,7 @@ if __name__ == '__main__':
     parser.add_argument('--start', '-t1', help="Start date - format month/day/year")
     parser.add_argument('--end', '-t2', help="End date - format month/day/year")
     parser.add_argument('--number', '-n', default=2000, type=int, help="The number of posts to grab")
+    parser.add_argument('--verbose', '-v', default=False, help="Turn on print-to-screen")
     args = parser.parse_args()
     sys.exit(main(args.subreddit, args.input, args.number, args.output,
                   args.start, args.end))

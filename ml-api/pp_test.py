@@ -38,4 +38,4 @@ def process(data, f_output):
                     compression='bz2', encoding='ISO-8859-1')
     except:
         print('caught in writing')
-    return
+    return data
