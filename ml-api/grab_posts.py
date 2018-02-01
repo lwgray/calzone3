@@ -7,7 +7,7 @@ from configparser import ConfigParser
 import time
 import argparse
 import sys
-from process_posts import process
+from pp_test import process
 
 
 config = ConfigParser()
@@ -35,54 +35,59 @@ def get_timestamps(time1, time2):
     return t1, t2
 
 
-def main(sub=False, f_input='subreddit.csv', number=2000, f_output='posts.csv', start=None, end=None):
-    print(f_input)
-    print(f_output)
-    print(number)
+def main(sub=False, f_input='subreddit.csv', number=100, f_output=False, start=None, end=None):
+    all_posts = []
     if sub:
         s = [sub]
     else:
         sbrt = pd.read_csv(f_input)
         s = sbrt.subreddit.tolist()
-        print(s[:3])
-
-    with open(f_output, 'a') as posts:
-        writer = csv.writer(posts)
-        for subreddit in s:
-            index = 0
-            x = reddit.subreddit(subreddit)
-            if start is not None and end is not None:
-                t1, t2 = get_timestamps(start, end)
-                submissions = x.submissions(t1, t2)
-            else:
-                submissions = x.submissions()
-            while index <= number:
-                try:
-                    data = next(submissions)
-                    print (subreddit, index, data.title.encode("utf-8"))
-                    writer.writerow([data.id, data.subreddit_name_prefixed,
-                                     data.title.encode("utf-8"), data.ups,
-                                     data.url, str(data.created_utc)])
-                    index += 1
-                except StopIteration:
-                    break
-                except Exception as e:
-                    print('General Exception', str(e), data.title)
-                    for i in range(60, 0, -1):
-                        time.sleep(1)
-                        print(i)
-                    continue
-            process(f_output, 'processed_{0}.csv'.format(subreddit))
+    
+    for subreddit in s:
+        features = []
+        index = 0
+        x = reddit.subreddit(subreddit)
+        if start is not None and end is not None:
+            t1, t2 = get_timestamps(start, end)
+            submissions = x.submissions(t1, t2)
+        else:
+            submissions = x.submissions()
+        while index <= number:
+            try:
+                data = next(submissions)
+                print (subreddit, index, data.title)
+                features.append([data.id, data.subreddit_name_prefixed,
+                                 data.title, data.ups,
+                                 data.url, str(data.created_utc)])
+                index += 1
+                attempts = 1
+            except StopIteration:
+                break
+            except Exception as e:
+                print('General Exception', str(e), data.title)
+                for i in range(60 * attempts, 0, -1):
+                    time.sleep(1)
+                    print(i)
+                attempts += 1
+                continue
+        if not f_output:
+            df = pd.DataFrame(data=features, columns=['id', 'subreddit', 'title', 'ups', 'url', 'created_utc'])
+            process(df, 'processed_{0}.csv'.format(subreddit))
+        else:
+            all_posts += features
+    if f_output:
+        df = pd.DataFrame(data=all_posts, columns=['id', 'subreddit', 'title', 'ups', 'url', 'created_utc'])
+        process(df, 'processed_{0}'.format(f_output))
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Grab posts by time')
-    parser.add_argument('--subreddit', '-s', default='python',
+    parser.add_argument('--subreddit', '-s', default=False,
                         help="Choose subreddit to search")
     parser.add_argument('--input', '-i', default='subreddit.csv',
-                        help="Name of input file")
-    parser.add_argument('--output', '-o', default='posts.csv',
-                        help="Name of output file")
+                        help="CSV file containing list of subreddits")
+    parser.add_argument('--output', '-o', default=False,
+                        help="CSV file to write data to")
     parser.add_argument('--start', '-t1', help="Start date - format month/day/year")
     parser.add_argument('--end', '-t2', help="End date - format month/day/year")
     parser.add_argument('--number', '-n', default=2000, type=int, help="The number of posts to grab")
