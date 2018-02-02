@@ -7,7 +7,7 @@ import sys
 import pandas as pd
 import praw
 from configparser import ConfigParser
-from pp_test import process
+from process_posts import process
 
 
 CONFIG = ConfigParser()
@@ -121,4 +121,4 @@ if __name__ == '__main__':
                         help="Turn on print-to-screen")
     args = parser.parse_args()
     sys.exit(grab_posts(args.subreddit, args.input, args.number, args.output,
-                        args.start, args.end))
+                        args.start, args.end, args.verbose))
