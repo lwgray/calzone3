@@ -1,4 +1,5 @@
-# What's in a name?  A tutorial on my machine-learning workflow for predicting whether or not this post will be popular
+## What's in a name?
+### A tutorial on my machine-learning workflow for predicting whether or not this post will be popular
 
 
 Dear Reader,
