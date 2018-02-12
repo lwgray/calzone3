@@ -1,4 +1,11 @@
-""" Script to Search for posts within Subreddits """
+""" Script to retrieve reddit submissions and Describe the data returned
+
+To use this script, you must obtain reddit credentials.
+To obtain credentials, you must create a reddit app
+To create an app, visit https://www.reddit.com/prefs/apps
+Take reddit app information and place it in the "config.praw.ini" file 
+
+"""
 import calendar
 from datetime import datetime
 import time
@@ -10,10 +17,15 @@ from configparser import ConfigParser
 # from process_posts import process
 from feature_extraction import Blob
 import numpy as np
+from nltk.stem.wordnet import WordNetLemmatizer
+from nltk import word_tokenize
+from nltk import pos_tag
+from textstat.textstat import textstat
 
 
+# To use this script - please input your reddit developer information into config.ini
 CONFIG = ConfigParser()
-CONFIG.read('../config2.ini')
+CONFIG.read('config.praw.ini')
 
 REDDIT = praw.Reddit(
     # [client_data]
@@ -159,7 +171,8 @@ def describe(data):
 	5.  Average Sentiment Polarity
 	6.  Average Sentiment Subjectivity
 	7.  Average number of Noun Phrases
-	
+        8.  Average number of Consonants
+        9.  Average number of vowels
 	These values are obtained for all titles,
 	titles that have greater than average upvotes,
 	and titles than have less than average upvotes
@@ -176,47 +189,86 @@ def describe(data):
     all_subjectivity = sum(subjectivity)/len(subjectivity)
     all_noun_phrases = sum(noun_phrases)/len(noun_phrases)
     all_votes = data.ups.mean()
+    all_avg_consonants = int(np.mean(data.title.str.findall(r'(?i)([^aeiou])').apply(len)))
+    all_avg_vowels = int(np.mean(data.title.str.findall(r'(?i)([aeiou])').apply(len)))
+    all_avg_kincaid = int(np.mean([textstat.flesch_kincaid_grade(x) for x in data.title]))
+    all_avg_flesch = int(np.mean([textstat.flesch_reading_ease(x) for x in data.title]))
+    all_avg_syllable = int(np.mean([textstat.syllable_count(x) for x in data.title]))
 
-    greater_than_avg = data['ups'] > data['ups'].mean()
-    gt_avg_blob = blob.transform(data[greater_than_avg]['title'])
+    gta = data[data['ups'] > data['ups'].mean()]
+    # greater_than_avg = data['ups'] > data['ups'].mean()
+    gt_avg_blob = blob.transform(gta['title'])
     noun_phrases, subjectivity, polarity = zip(*gt_avg_blob)
-    gt_avg_max_len_title = max([len(x) for x in data[greater_than_avg]['title']])
-    gt_avg_avg_len_title = int(np.mean([len(x) for x in data[greater_than_avg]['title']]))
-    gt_avg_max_word_count = max([len(x.split()) for x in data[greater_than_avg]['title']])
-    gt_avg_avg_word_count = int(np.mean([len(x.split()) for x in data[greater_than_avg]['title']]))
+    gt_avg_max_len_title = max([len(x) for x in gta['title']])
+    gt_avg_avg_len_title = int(np.mean([len(x) for x in gta['title']]))
+    gt_avg_max_word_count = max([len(x.split()) for x in gta['title']])
+    gt_avg_avg_word_count = int(np.mean([len(x.split()) for x in gta['title']]))
     gt_avg_polarity= sum(polarity)/len(polarity)
     gt_avg_subjectivity= sum(subjectivity)/len(subjectivity)
     gt_avg_noun_phrases= sum(noun_phrases)/len(noun_phrases)
-    gt_avg_votes = data[greater_than_avg]['ups'].mean()
+    gt_avg_votes = gta['ups'].mean()
+    gta_avg_consonants = int(np.mean(gta.title.str.findall(r'(?i)([^aeiou])').apply(len)))
+    gta_avg_vowels = int(np.mean(gta.title.str.findall(r'(?i)([aeiou])').apply(len)))
+    gta_avg_kincaid = int(np.mean([textstat.flesch_kincaid_grade(x) for x in gta.title]))
+    gta_avg_flesch = int(np.mean([textstat.flesch_reading_ease(x) for x in gta.title]))
+    gta_avg_syllable = int(np.mean([textstat.syllable_count(x) for x in gta.title]))
 
-    less_than_avg = data['ups'] <= data['ups'].mean()
-    lt_avg_blob = blob.transform(data[less_than_avg]['title'])
+    lta = data[data['ups'] <= data['ups'].mean()]
+    # less_than_avg = data['ups'] <= data['ups'].mean()
+    lt_avg_blob = blob.transform(lta['title'])
     noun_phrases, subjectivity, polarity = zip(*lt_avg_blob)
-    lt_avg_max_len_title = max([len(x) for x in data[less_than_avg]['title']])
-    lt_avg_avg_len_title = int(np.mean([len(x) for x in data[less_than_avg]['title']]))
-    lt_avg_max_word_count = max([len(x.split()) for x in data[less_than_avg]['title']])
-    lt_avg_avg_word_count = int(np.mean([len(x.split()) for x in data[less_than_avg]['title']]))
+    lt_avg_max_len_title = max([len(x) for x in lta['title']])
+    lt_avg_avg_len_title = int(np.mean([len(x) for x in lta['title']]))
+    lt_avg_max_word_count = max([len(x.split()) for x in lta['title']])
+    lt_avg_avg_word_count = int(np.mean([len(x.split()) for x in lta['title']]))
     lt_avg_polarity= sum(polarity)/len(polarity)
     lt_avg_subjectivity= sum(subjectivity)/len(subjectivity)
     lt_avg_noun_phrases= sum(noun_phrases)/len(noun_phrases)
-    lt_avg_votes = data[less_than_avg]['ups'].mean()
+    lt_avg_votes = lta['ups'].mean()
+    lta_avg_consonants = int(np.mean(lta.title.str.findall(r'(?i)([^aeiou])').apply(len)))
+    lta_avg_vowels = int(np.mean(lta.title.str.findall(r'(?i)([aeiou])').apply(len)))
+    lta_avg_kincaid = int(np.mean([textstat.flesch_kincaid_grade(x) for x in lta.title]))
+    lta_avg_flesch = int(np.mean([textstat.flesch_reading_ease(x) for x in lta.title]))
+    lta_avg_syllable = int(np.mean([textstat.syllable_count(x) for x in lta.title]))
 
-    data = {'Max_Title': [all_max_len_title, gt_avg_max_len_title, lt_avg_max_len_title],
-	    'Avg_Title': [all_avg_len_title, gt_avg_avg_len_title, lt_avg_avg_len_title],
-            'Max_Word_Count': [all_max_word_count, gt_avg_max_word_count, lt_avg_max_word_count],
-            'Avg_Word_Count': [all_avg_word_count, gt_avg_avg_word_count, lt_avg_avg_word_count],
-	    'Noun_Phrases':[all_noun_phrases, gt_avg_noun_phrases, lt_avg_noun_phrases],
-	    'Subjectivity':[all_subjectivity, gt_avg_subjectivity, lt_avg_subjectivity],
-	    'Polarity':[all_polarity, gt_avg_polarity, lt_avg_polarity],
-	    'Avg_Votes':[all_votes, gt_avg_votes, lt_avg_votes]}
-    df = pd.DataFrame(data=data, index=['All', 'Greater_Than_Average', 'Less_Than_Average'],
-                      columns=['Max_Title', 'Avg_Title', 'Max_Word_Count', 'Avg_Word_Count',
-		               'Noun_Phrases', 'Subjectivity', 'Polarity', 'Avg_Votes'])
+    # print(all_avg_vowels, gta_avg_vowels, lta_avg_vowels)
+
+    data = {
+            'Characters': [all_avg_len_title, gt_avg_avg_len_title, lt_avg_avg_len_title],
+            'Words': [all_avg_word_count, gt_avg_avg_word_count, lt_avg_avg_word_count],
+            'Noun_Phrases':[all_noun_phrases, gt_avg_noun_phrases, lt_avg_noun_phrases],
+            'Syllables': [all_avg_syllable, gta_avg_syllable, lta_avg_syllable],
+            'Subjectivity':[all_subjectivity, gt_avg_subjectivity, lt_avg_subjectivity],
+            'Polarity':[all_polarity, gt_avg_polarity, lt_avg_polarity],
+            'Votes':[all_votes, gt_avg_votes, lt_avg_votes],
+            'Consonants':[all_avg_consonants, gta_avg_consonants, lta_avg_consonants],
+            'Vowels':[all_avg_vowels, gta_avg_vowels, lta_avg_vowels],
+            'Kincaid': [ all_avg_kincaid, gta_avg_kincaid, lta_avg_kincaid],
+            'Flesch': [ all_avg_flesch, gta_avg_flesch, lta_avg_flesch]
+            }
+
+    df = pd.DataFrame(data=data, index=['All', 'Success', 'Failure'],
+                      columns=['Characters', 'Words', 'Noun_Phrases',
+                               'Syllables', 'Subjectivity', 'Polarity', 'Votes',
+                               'Consonants', 'Vowels', 'Kincaid', 'Flesch'])
     return df
 
 
+def lemma(token, tag):
+    lemmatizer = WordNetLemmatizer()
+    if tag[0].lower() in ['n', 'v']:
+        return lemmatizer.lemmatize(token, tag[0].lower())
+    return token
+
+
+def lemmatize(data):
+    tagged_corpus = [pos_tag(word_tokenize(title)) for title in data['title'].str.replace("/", " ").str.lower()]
+    lc = [" ".join([lemma(token, tag) for token, tag in title]) for title in tagged_corpus]
+    return lc
+
+
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='Grab posts by time')
+    parser = argparse.ArgumentParser(description='Grab Reddit Submissions')
     parser.add_argument('--subreddit', '-s', default=False,
                         help="Choose subreddit to search")
     parser.add_argument('--input', '-i', default='subreddit.csv',

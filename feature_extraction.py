@@ -2,6 +2,14 @@
 from sklearn.base import BaseEstimator, TransformerMixin
 import pandas as pd
 from textblob import TextBlob
+import re
+import nltk
+from nltk import word_tokenize
+from nltk.stem import WordNetLemmatizer
+from itertools import chain
+from collections import Counter
+import numpy as np
+from textstat.textstat import textstat
 
 
 class DataExtractor(BaseEstimator, TransformerMixin):
@@ -54,7 +62,7 @@ class Vowels(BaseEstimator, TransformerMixin):
         return self
 
     def transform(self, titles):
-        df = pd.DataFrame({'vowels': titles.str.findall(r'[aeiou]').apply(len)})
+        df = pd.DataFrame({'vowels': titles.str.findall(r'(?i)([aeiou])').apply(len)})
         return df['vowels'].values.reshape(-1, 1)
 
 
@@ -65,7 +73,7 @@ class Consonants(BaseEstimator, TransformerMixin):
         return self
 
     def transform(self, titles):
-        df = pd.DataFrame({'consonants': titles.str.findall('r[^aeiou]').apply(len)})
+        df = pd.DataFrame({'consonants': titles.str.findall(r'(?i)([^aeiou])').apply(len)})
         return df['consonants'].values.reshape(-1, 1)
 
 
@@ -126,8 +134,66 @@ class Words(BaseEstimator, TransformerMixin):
         return self
 
     def transform(self, titles):
-        words = list(zip(titles.str.findall('r[aeiou]').apply(len),
-                         titles.str.findall('r[^aeiou]').apply(len),
+        words = list(zip(titles.str.findall(r'(?i)([aeiou])').apply(len),
+                         titles.str.findall(r'(?i)([^aeiou])').apply(len),
                          titles.str.len(),
                          titles.str.split().apply(len)))
         return words
+
+
+class Readable(BaseEstimator, TransformerMixin):
+    """ Extract scores related to sentence readability """
+
+    def fit(self, x, y=None):
+        return self
+
+    def transform(self, titles):
+        words = list(zip(
+                         [textstat.flesch_kincaid_grade(x) for x in titles],
+                         [textstat.syllable_count(x) for x in titles],
+                         [textstat.flesch_reading_ease(x) for x in titles]
+                         )
+                    )
+        return words
+
+class Exclude(BaseEstimator, TransformerMixin):
+    """ Combine Vowels,Consonants, CharCount, and WordCount extractors """
+
+    def fit(self, x, y=None):
+        return self
+
+    def transform(self, titles):
+        words = list(zip(titles.str.split().apply(len)))
+        return words
+
+
+class POS(BaseEstimator, TransformerMixin):
+    """ Count the parts-of-speech present in each title """
+
+    def fit(self, x, y=None):
+        return self
+
+    def transform(self, titles):
+        def add_pos_with_zero_counts(counter, keys_to_add):
+            for k in keys_to_add:
+                counter[k] = counter.get(k,0)
+            return counter
+        blobs = [x for x in [TextBlob(sentence).tags for sentence in titles]]
+        possible_tags = ['CC', 'CD', 'DT', 'EX', 'FW', 'IN', 'JJ', 'JJR',
+                         'JJS', 'LS', 'MD', 'NN', 'NNP', 'NNPS', 'NNS',
+                         'PDT', 'POS', 'PRP', 'PRP$', 'RB', 'RBR', 'RBS',
+                         'RP', 'SYM', 'TO', 'UH', 'VB', 'VBD', 'VBG',
+                         'VBN', 'VBP', 'VBZ', 'WDT', 'WP', 'WRB']
+        # possible_tags = sorted(set(list(zip(*chain(*blobs)))[1]))
+        pos_counts = [Counter(list(zip(*x))[1]) for x in blobs]
+        pos_counts_with_zero = [add_pos_with_zero_counts(x, possible_tags) for x in pos_counts]
+        sent_vector = [[count for tag, count in sorted(x.most_common())] for x in pos_counts_with_zero]
+        df = pd.DataFrame(sent_vector, columns=sorted(possible_tags))
+        return df.values
+
+
+class LemmaTokenizer(object):
+    def __init__(self):
+        self.wnl = WordNetLemmatizer()
+    def __call__(self, articles):
+        return [self.wnl.lemmatize(str.strip(re.sub(r'[^\w\s]','',t))) for t in word_tokenize(articles)]
