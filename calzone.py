@@ -25,7 +25,7 @@ from textstat.textstat import textstat
 
 # To use this script - please input your reddit developer information into config.ini
 CONFIG = ConfigParser()
-CONFIG.read('config.praw.ini')
+CONFIG.read('config2.ini')
 
 REDDIT = praw.Reddit(
     # [client_data]
@@ -149,8 +149,8 @@ def process(data, f_output):
                  'title'] = data.loc[data['subreddit'] == 'r/photoshopbattles',
                                      'title'].str.replace('PsBattle:', '')
 
-    data.to_csv('{0}.bz2'.format(f_output), index=False,
-                compression='bz2', encoding='utf-8')
+    # data.to_csv('{0}.bz2'.format(f_output), index=False,
+    #             compression='bz2', encoding='utf-8')
     return data
 
 
