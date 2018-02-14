@@ -13,7 +13,6 @@ import argparse
 import sys
 import pandas as pd
 import praw
-from configparser import ConfigParser
 # from process_posts import process
 from feature_extraction import Blob
 import numpy as np
