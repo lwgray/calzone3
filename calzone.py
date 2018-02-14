@@ -21,21 +21,25 @@ from nltk.stem.wordnet import WordNetLemmatizer
 from nltk import word_tokenize
 from nltk import pos_tag
 from textstat.textstat import textstat
+import os
 
 
-# To use this script - please input your reddit developer information into config.ini
-CONFIG = ConfigParser()
-CONFIG.read('config2.ini')
+client_id = os.environ.get('CLIENT_ID')
+client_secret = os.environ.get('CLIENT_SECRET')
+user_agent = os.environ.get('USER_AGENT')
+username = os.environ.get('USERNAME')
+password = os.environ.get('PASSWORD')
+
 
 REDDIT = praw.Reddit(
     # [client_data]
-    client_id=CONFIG["client_data"]["client_id"],
-    client_secret=CONFIG["client_data"]["client_secret"],
-    user_agent=CONFIG["client_data"]["user_agent"],
+    client_id=client_id,
+    client_secret=client_secret,
+    user_agent=user_agent,
 
     # [credentials]
-    username=CONFIG["credentials"]["username"],
-    password=CONFIG["credentials"]["password"]
+    username=username,
+    password=password
 )
 
 
