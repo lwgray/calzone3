@@ -6,3 +6,6 @@ sqlite3.exe
 sqlite3_analyzer.exe
 .ipynb_checkpoints
 config2.ini
+datascience.xz
+__pycache__/
+misc/
