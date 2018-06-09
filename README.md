@@ -1,23 +1,12 @@
 ## What's in a name?
 ### A tutorial on my machine-learning workflow for predicting whether or not this post will be popular
 
-
 Dear Reader,
 
-The purpose of the notebook is simple: describe my efforts in building a machine learning model.
+When writing an article, blog, or post we all worry about whether others will read it, like it, or even share it.  I too suffer from this common anxiety; I want my writings to be popular!  I often wondered why my posts received less clicks/likes than another's.  On the surface, the only obvious differences were the title of the posts.  With this thought in mind, I began to formulate a hypothesis.  Maybe the title/name of a post correlates with its popularity?  If this is so, then maybe I can reverse-engineer the process and pick only popular titles.
 
-I posted an article on /r/datascience subreddit to test its predictive power.  
+This leads us to the purpose of this article. The purpose of this article is to describe my efforts to predict whether or not a post to the [/r/datascience](https://www.reddit.com/r/datascience) subreddit will be popular. I define popularity as receiving more than the average number of upvotes.  I take a unique approach in making this prediction.  My prediction methodology is based solely on the title of the redditor's post, hence this blog's title: What's in a name?.  
 
-In this one instance I say that it worked as it was built for. As of today, 2/13/2018 at 7:38am EST it has received 18 votes. It might not seem like a lot of votes, but you have to take into consideration that unpopular posts in the /r/datascience subreddit receive on average 2 votes
-
-Most excitingly, I even have controls for this experiment. This model was built specifically for /r/datascience. I cross-posted this article on /r/python and /r/machine and received 0 and 1 votes respectively. oh yeah!
-
-I know that I need more controls, more posts and a better f1 score but I am very optimistic
-
-See original /r/datascience post: https://redd.it/7x2ak4
-See /r/python posting: https://redd.it/7x3mgb
-See /r/machinelearning post: https://redd.it/7x3npw
+Visit classify.ipynb to start the tutorial
 
 
-
-If you have any questions, dm me [reddit](https://www.reddit.com/user/W1zK1dd/), [linkedin](https://www.linkedin.com/in/larry-gray-phd/), [github](https://github.com/lwgray) 

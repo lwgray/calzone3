@@ -127,6 +127,17 @@ class Blob(BaseEstimator, TransformerMixin):
         return blobs
 
 
+class Polarity(BaseEstimator, TransformerMixin):
+    """ polarity extraction """
+
+    def fit(self, x, y=None):
+        return self
+
+    def transform(self, titles):
+        blobs = [(x.sentiment.polarity) for x in [TextBlob(sentence) for sentence in titles]]
+        return blobs
+    
+    
 class Words(BaseEstimator, TransformerMixin):
     """ Combine Vowels,Consonants, CharCount, and WordCount extractors """
 
