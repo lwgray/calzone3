@@ -26,4 +26,4 @@ def get_delay():
 
 if __name__ == '__main__':
     logmodel = joblib.load('ds.xz')
-    app.run(debug=True)
+    app.run()
