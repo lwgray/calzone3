@@ -25,5 +25,5 @@ def get_delay():
         return render_template('result.html', prediction=prediction)
 
 if __name__ == '__main__':
-    logmodel = joblib.load('datascience.xz')
+    logmodel = joblib.load('ds.xz')
     app.run(debug=True)
