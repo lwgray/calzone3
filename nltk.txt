@@ -1,3 +1,6 @@
 wordnet
 brown
 punkt
+averaged_perceptron_tagger
+con112000
+movie_reviews
