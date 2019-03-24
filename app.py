@@ -20,10 +20,10 @@ def index():
 def get_delay():
     if request.method == 'POST':
         result = request.form
-        # logmodel = joblib.load('datascience.xz')
+        logmodel = joblib.load('ds.xz')
         prediction = logmodel.predict(pd.Series([result['query']]))
         return render_template('result.html', prediction=prediction)
 
 if __name__ == '__main__':
-    logmodel = joblib.load('ds.xz')
+    # logmodel = joblib.load('ds.xz')
     app.run()
