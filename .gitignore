@@ -9,3 +9,6 @@ config2.ini
 datascience.xz
 __pycache__/
 misc/
+*.jar
+*.sh
+*.new
