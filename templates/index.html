@@ -1,13 +1,17 @@
 <html>
+    <head>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    </head>
 <body>
-    <h3>Reddit Title Prediction Form</h3>
 
 <div>
   <form action="/getdelay" method="POST">
-    <label for="Title">Article Title</label>
-    <input type="text" id="query" name="query">
+      <div class="form-group">
+          <h4><label for="Title" class="label label-default">Enter your Article's Title</label></h4>
+          <input type="text" id="query" name="query", class="form-control", aria-describedby="emailHelp" placeholder="Type Something silly">
+      </div>
     <br>
-    <input type="submit" value="Submit">
+    <input type="submit" value="Submit" class="btn btn-primary">
   </form>
 </div>
 </body>
