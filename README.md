@@ -9,4 +9,4 @@ This leads us to the purpose of this article. The purpose of this article is to 
 
 Visit classify.ipynb to start the tutorial
 
-
+Checkout a live version of it [@here](calzone3.herokuapps.com)
