@@ -9,6 +9,7 @@ import pandas as pd
 
 #creating instance of the class
 app=Flask(__name__)
+logmodel = joblib.load('ds.xz')
 
 #to tell flask what url shoud trigger the function index()
 @app.route('/')
@@ -21,7 +22,7 @@ def get_delay():
     if request.method == 'POST':
         result = request.form
         # logmodel = joblib.load('datascience_keras_noYB.xz')
-        logmodel = joblib.load('ds.xz')
+        # logmodel = joblib.load('ds.xz')
         prediction = logmodel.predict(pd.Series([result['query']]))
         return render_template('result.html', prediction=prediction, query=result['query'])
 
